@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { ArrowLeft, Calendar, Clock, User, Share2 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { ArrowLeft, Calendar, Clock, User, Share2, Check, Copy } from 'lucide-react';
 import { BlogPost, PageView } from '../types';
 
 interface BlogPostProps {
@@ -9,9 +9,32 @@ interface BlogPostProps {
 }
 
 export const BlogPostView: React.FC<BlogPostProps> = ({ post, onNavigate, onBack }) => {
+    const [shareState, setShareState] = useState<'idle' | 'copied'>('idle');
+
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [post]);
+
+    const handleShare = async () => {
+        const shareData = {
+            title: post.title,
+            text: post.excerpt,
+            url: window.location.href // In a real routing setup, this would be a specific slug URL
+        };
+
+        try {
+            if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+                await navigator.share(shareData);
+            } else {
+                // Fallback to clipboard
+                await navigator.clipboard.writeText(`${post.title}\n\n${window.location.href}`);
+                setShareState('copied');
+                setTimeout(() => setShareState('idle'), 2000);
+            }
+        } catch (err) {
+            console.error('Error sharing:', err);
+        }
+    };
 
     return (
           <div className="relative w-full pt-12 pb-24">
@@ -68,7 +91,7 @@ export const BlogPostView: React.FC<BlogPostProps> = ({ post, onNavigate, onBack
                 </div>
                 
                 {/* Article Footer / Share */}
-                <div className="border-t border-gray-200 dark:border-white/10 pt-8 flex items-center justify-between">
+                <div className="border-t border-gray-200 dark:border-white/10 pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                             <User size={20} className="text-gray-500 dark:text-gray-300" />
@@ -78,9 +101,19 @@ export const BlogPostView: React.FC<BlogPostProps> = ({ post, onNavigate, onBack
                             <div className="text-xs text-gray-500 dark:text-gray-400">Security Research</div>
                         </div>
                     </div>
-                    <button className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                        <Share2 size={18} />
-                        Share Article
+                    
+                    <button 
+                        onClick={handleShare}
+                        className={`
+                            flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300
+                            ${shareState === 'copied' 
+                                ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' 
+                                : 'bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400'
+                            }
+                        `}
+                    >
+                        {shareState === 'copied' ? <Check size={18} /> : <Share2 size={18} />}
+                        {shareState === 'copied' ? 'Link Copied!' : 'Share Article'}
                     </button>
                 </div>
 
