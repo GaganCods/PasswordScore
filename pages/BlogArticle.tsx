@@ -1,27 +1,26 @@
-'use client';
-
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, Calendar, Clock, User, Share2, Check } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import { ArrowLeft, Calendar, Clock, User, Share2, Check, ShieldCheck } from 'lucide-react';
+import { BLOG_POSTS } from '../data/blogPosts';
 
-interface BlogPostViewProps {
-  post: {
-    title: string;
-    excerpt: string;
-    category: string;
-    date: string;
-    readTime: string;
-    image: string;
-    content: React.ReactNode;
-  };
-}
-
-export const BlogPostView: React.FC<BlogPostViewProps> = ({ post }) => {
+export const BlogArticle: React.FC = () => {
+    const { slug } = useParams<{ slug: string }>();
+    const post = BLOG_POSTS.find(p => p.slug === slug);
     const [shareState, setShareState] = useState<'idle' | 'copied'>('idle');
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, []);
+    }, [slug]);
+
+    if (!post) {
+      return (
+        <div className="min-h-[50vh] flex flex-col items-center justify-center p-8">
+            <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">Article Not Found</h1>
+            <Link to="/blog" className="text-blue-600 hover:underline">Return to Blog</Link>
+        </div>
+      );
+    }
 
     const handleShare = async () => {
         const shareData = {
@@ -34,7 +33,6 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({ post }) => {
             if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
                 await navigator.share(shareData);
             } else {
-                // Fallback to clipboard
                 await navigator.clipboard.writeText(`${post.title}\n\n${window.location.href}`);
                 setShareState('copied');
                 setTimeout(() => setShareState('idle'), 2000);
@@ -45,7 +43,17 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({ post }) => {
     };
 
     return (
-          <div className="relative w-full pt-12 pb-24">
+      <>
+        <Helmet>
+            <title>{post.title} | PasswordScore Blog</title>
+            <meta name="description" content={post.excerpt} />
+            <meta property="og:title" content={post.title} />
+            <meta property="og:description" content={post.excerpt} />
+            <meta property="og:image" content={post.image} />
+            <meta property="og:type" content="article" />
+        </Helmet>
+
+        <div className="relative w-full pt-12 pb-24">
              {/* Background */}
             <div className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-b from-transparent via-gray-50/50 to-[var(--footer-base)] dark:from-transparent dark:via-black/10 dark:to-[var(--footer-base)]" aria-hidden="true" />
 
@@ -95,6 +103,19 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({ post }) => {
                 <div className="prose prose-lg dark:prose-invert max-w-none mb-16">
                      {post.content}
                 </div>
+
+                {/* Internal CTA */}
+                <div className="my-12 p-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl text-center text-white shadow-xl">
+                    <h3 className="text-2xl font-bold mb-4">Don't Leave Your Security to Chance</h3>
+                    <p className="mb-6 opacity-90">Check your password score instantly and securely.</p>
+                    <Link 
+                        to="/tool"
+                        className="inline-flex items-center gap-2 px-8 py-3 bg-white text-blue-600 rounded-full font-bold hover:scale-105 transition-transform"
+                    >
+                        <ShieldCheck size={20} />
+                        Check Your Password Score Now
+                    </Link>
+                </div>
                 
                 {/* Article Footer / Share */}
                 <div className="border-t border-gray-200 dark:border-white/10 pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
@@ -125,5 +146,6 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({ post }) => {
 
             </div>
           </div>
+      </>
       );
 };

@@ -1,15 +1,15 @@
 import React from 'react';
 import { Shield, Github, Instagram, Linkedin, CheckCircle2, ArrowUpRight } from 'lucide-react';
-import { Link } from './Link';
-import { useNavigation } from './NavigationContext';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 export const Footer: React.FC = () => {
-  const { navigate, view } = useNavigation();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const handleSectionClick = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
-    if (view !== 'home') {
-      navigate('home');
+    if (pathname !== '/') {
+      navigate('/');
       // Allow time for the landing page to mount
       setTimeout(() => {
         const element = document.getElementById(id);
@@ -46,7 +46,7 @@ export const Footer: React.FC = () => {
           {/* Brand Block (Left - ~50%) */}
           <div className="lg:col-span-6 space-y-8">
             <Link 
-              href="/"
+              to="/"
               className="flex items-center gap-3 cursor-pointer group w-fit"
             >
                <div className="bg-gradient-to-br from-violet-600 to-indigo-600 p-2.5 rounded-xl text-white shadow-lg shadow-violet-500/20 group-hover:scale-105 transition-transform duration-300">
@@ -79,8 +79,8 @@ export const Footer: React.FC = () => {
               <div>
                 <h4 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-6">Product</h4>
                 <ul className="space-y-4">
-                  <li><Link href="/tool" className="text-base text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors duration-200 font-medium">Password Checker</Link></li>
-                  <li><Link href="/blog" className="text-base text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors duration-200 font-medium">Blog</Link></li>
+                  <li><Link to="/tool" className="text-base text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors duration-200 font-medium">Password Checker</Link></li>
+                  <li><Link to="/blog" className="text-base text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors duration-200 font-medium">Blog</Link></li>
                   <li>
                     <a 
                       href="#features" 
@@ -190,7 +190,7 @@ export const Footer: React.FC = () => {
              <span>Privacy-first password checker.</span>
           </div>
           
-          <Link href="/privacy" className="text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+          <Link to="/privacy" className="text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
             Privacy Policy
           </Link>
         </div>
