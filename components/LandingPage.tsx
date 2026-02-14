@@ -5,20 +5,15 @@ import { EducationalSection } from './EducationalSection';
 import { PrivacySection } from './PrivacySection';
 import { FAQSection } from './FAQSection';
 import { CTASection } from './CTASection';
-import { PageView } from '../types';
 
-interface LandingPageProps {
-  onNavigate: (page: PageView) => void;
-}
-
-export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
+export const LandingPage: React.FC = () => {
   return (
     <div className="space-y-0">
-      <Hero onNavigate={onNavigate} />
+      <Hero />
       <FeaturesSection />
       <EducationalSection />
       <PrivacySection />
-      <CTASection onNavigate={onNavigate} />
+      <CTASection />
       <FAQSection />
     </div>
   );

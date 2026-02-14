@@ -1,12 +1,8 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
-import { PageView } from '../types';
+import { Link } from './Link';
 
-interface CTASectionProps {
-  onNavigate: (page: PageView) => void;
-}
-
-export const CTASection: React.FC<CTASectionProps> = ({ onNavigate }) => {
+export const CTASection: React.FC = () => {
   return (
     <div className="relative w-full py-24 flex justify-center px-4 animate-fade-in-up">
       <div
@@ -45,16 +41,16 @@ export const CTASection: React.FC<CTASectionProps> = ({ onNavigate }) => {
             Stop guessing. Start knowing. Use our advanced tools to ensure your digital life is protected against modern threats.
           </p>
           
-          <button 
-              onClick={() => onNavigate('tool')}
-              className="group relative px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-full font-bold text-lg hover:scale-105 transition-all duration-300 flex items-center gap-2 mx-auto overflow-hidden shadow-lg shadow-gray-900/10 dark:shadow-white/10"
+          <Link 
+              href="/tool"
+              className="group relative px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-full font-bold text-lg hover:scale-105 transition-all duration-300 flex items-center gap-2 mx-auto overflow-hidden shadow-lg shadow-gray-900/10 dark:shadow-white/10 w-fit"
           >
               <span className="relative z-10 flex items-center gap-2">
                   Test My Password <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </span>
               {/* Button Hover Glow */}
               <div className="absolute inset-0 bg-white/20 dark:bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          </button>
+          </Link>
         </div>
 
       </div>

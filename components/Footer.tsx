@@ -1,32 +1,28 @@
 import React from 'react';
 import { Shield, Github, Instagram, Linkedin, CheckCircle2, ArrowUpRight } from 'lucide-react';
-import { PageView } from '../types';
+import { Link } from './Link';
+import { useNavigation } from './NavigationContext';
 
-interface FooterProps {
-  onNavigate: (page: PageView) => void;
-}
+export const Footer: React.FC = () => {
+  const { navigate, view } = useNavigation();
 
-export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
-  
-  const handleNavigation = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      onNavigate('home');
-      // Wait for home page to mount
+  const handleSectionClick = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    if (view !== 'home') {
+      navigate('home');
+      // Allow time for the landing page to mount
       setTimeout(() => {
-        const el = document.getElementById(sectionId);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth' });
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
         }
-      }, 300); // Increased timeout slightly to ensure render completion
+      }, 100);
+    } else {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
-  };
-
-  const scrollToHero = () => {
-    onNavigate('home');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -49,15 +45,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           
           {/* Brand Block (Left - ~50%) */}
           <div className="lg:col-span-6 space-y-8">
-            <div 
+            <Link 
+              href="/"
               className="flex items-center gap-3 cursor-pointer group w-fit"
-              onClick={() => onNavigate('home')}
             >
                <div className="bg-gradient-to-br from-violet-600 to-indigo-600 p-2.5 rounded-xl text-white shadow-lg shadow-violet-500/20 group-hover:scale-105 transition-transform duration-300">
                   <Shield size={24} fill="currentColor" className="opacity-90" />
                </div>
                <span className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">PasswordScore</span>
-            </div>
+            </Link>
             
             <p className="text-gray-500 dark:text-gray-400 text-base leading-relaxed max-w-md">
               Secure password analysis — fully client-side and private by design. 
@@ -83,11 +79,35 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <div>
                 <h4 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-6">Product</h4>
                 <ul className="space-y-4">
-                  <li><button onClick={() => onNavigate('tool')} className="text-base text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors duration-200 font-medium">Password Checker</button></li>
-                  <li><button onClick={() => onNavigate('blog')} className="text-base text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors duration-200 font-medium">Blog</button></li>
-                  <li><button onClick={() => handleNavigation('features')} className="text-base text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors duration-200 font-medium">Features</button></li>
-                  <li><button onClick={() => handleNavigation('learn')} className="text-base text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors duration-200 font-medium">How It Works</button></li>
-                  <li><button onClick={() => handleNavigation('faq')} className="text-base text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors duration-200 font-medium">FAQ</button></li>
+                  <li><Link href="/tool" className="text-base text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors duration-200 font-medium">Password Checker</Link></li>
+                  <li><Link href="/blog" className="text-base text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors duration-200 font-medium">Blog</Link></li>
+                  <li>
+                    <a 
+                      href="#features" 
+                      onClick={(e) => handleSectionClick(e, 'features')}
+                      className="text-base text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors duration-200 font-medium cursor-pointer"
+                    >
+                      Features
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#learn" 
+                      onClick={(e) => handleSectionClick(e, 'learn')}
+                      className="text-base text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors duration-200 font-medium cursor-pointer"
+                    >
+                      How It Works
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#faq" 
+                      onClick={(e) => handleSectionClick(e, 'faq')}
+                      className="text-base text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors duration-200 font-medium cursor-pointer"
+                    >
+                      FAQ
+                    </a>
+                  </li>
                 </ul>
               </div>
 
@@ -97,12 +117,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <div className="space-y-6">
                     <div className="space-y-2">
                         <p className="text-sm text-gray-400">Built by</p>
-                        <button 
-                            onClick={scrollToHero}
+                        <a 
+                            href="https://gaganpratap.vercel.app/" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
                             className="block text-base font-semibold text-gray-900 dark:text-white hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
                         >
                             Gagan Pratap
-                        </button>
+                        </a>
                     </div>
                     
                     <ul className="space-y-3">
@@ -118,10 +140,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                             </a>
                         </li>
                          <li>
-                            <button onClick={() => onNavigate('contact')} className="group flex items-center gap-2 text-base text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors font-medium">
+                            <a href="mailto:support@passwordscore.com" className="group flex items-center gap-2 text-base text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors font-medium">
                                 Contact
                                 <ArrowUpRight size={14} className="group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
-                            </button>
+                            </a>
                         </li>
                     </ul>
 
@@ -168,9 +190,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
              <span>Privacy-first password checker.</span>
           </div>
           
-          <button onClick={() => onNavigate('privacy')} className="text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+          <Link href="/privacy" className="text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
             Privacy Policy
-          </button>
+          </Link>
         </div>
       </div>
     </footer>

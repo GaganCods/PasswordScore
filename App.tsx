@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { LandingPage } from './components/LandingPage';
@@ -9,86 +9,62 @@ import { BlogPage } from './components/BlogPage';
 import { BlogPostView } from './components/BlogPost';
 import { CosmicBackground } from './components/CosmicBackground';
 import { BackToTop } from './components/BackToTop';
-import { PageView } from './types';
+import { ThemeProvider } from './components/ThemeProvider';
+import { NavigationProvider, useNavigation } from './components/NavigationContext';
 import { BLOG_POSTS } from './data/blogPosts';
 
-const App: React.FC = () => {
-  const [view, setView] = useState<PageView>('home');
-  const [selectedBlogSlug, setSelectedBlogSlug] = useState<string | null>(null);
-  
-  const [darkMode, setDarkMode] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('theme') === 'dark' || 
-             (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    }
-    return false;
-  });
-
-  // Theme effect
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [darkMode]);
-
-  const handleNavigate = (page: PageView, slug?: string) => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (page === 'blog-post' && slug) {
-        setSelectedBlogSlug(slug);
-    }
-    setView(page);
-  };
+const AppContent: React.FC = () => {
+  const { view, slug } = useNavigation();
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-x-hidden">
         
         <CosmicBackground />
 
-        <Header 
-          darkMode={darkMode} 
-          toggleDarkMode={() => setDarkMode(!darkMode)} 
-          onNavigate={handleNavigate}
-          currentPage={view}
-        />
+        <Header />
 
         <main className="flex-grow pt-24"> 
           {/* pt-24 accounts for fixed header height */}
           {view === 'home' && (
-            <LandingPage onNavigate={handleNavigate} />
+            <LandingPage />
           )}
           
           {view === 'tool' && (
-             <PasswordStrengthTool />
+              <PasswordStrengthTool />
           )}
 
           {view === 'blog' && (
-             <BlogPage onNavigate={handleNavigate} onReadPost={(slug) => handleNavigate('blog-post', slug)} />
+              <BlogPage />
           )}
 
-          {view === 'blog-post' && selectedBlogSlug && (
-             <BlogPostView 
-                post={BLOG_POSTS.find(p => p.slug === selectedBlogSlug)!} 
-                onNavigate={handleNavigate}
-                onBack={() => handleNavigate('blog')}
-             />
+          {view === 'blog-post' && slug && (
+              <BlogPostView 
+                post={BLOG_POSTS.find(p => p.slug === slug)!} 
+              />
           )}
 
           {view === 'privacy' && (
-             <PrivacyPolicy />
+              <PrivacyPolicy />
           )}
 
           {view === 'contact' && (
-             <ContactPage />
+              <ContactPage />
           )}
         </main>
 
-        <Footer onNavigate={handleNavigate} />
+        <Footer />
         <BackToTop />
     </div>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <ThemeProvider>
+      <NavigationProvider>
+        <AppContent />
+      </NavigationProvider>
+    </ThemeProvider>
   );
 };
 

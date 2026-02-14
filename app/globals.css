@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Global Background Strategy */
+  --bg-main: #f8fafc;
+  
+  /* Nebula Colors - Light */
+  --nebula-1: rgba(139, 92, 246, 0.08); /* Violet */
+  --nebula-2: rgba(59, 130, 246, 0.08); /* Blue */
+  --nebula-3: rgba(236, 72, 153, 0.05); /* Pink */
+  
+  /* Grid Color - Light */
+  --grid-color: rgba(15, 23, 42, 0.1); 
+
+  /* Footer Variables - Light */
+  --footer-base: #f8fafc;
+  --footer-radial-start: #ffffff;
+  --footer-radial-end: #7c3aed;
+  
+  /* Scrollbar - Light Theme */
+  --sb-track: transparent;
+  --sb-thumb: rgba(124, 58, 237, 0.2); 
+  --sb-thumb-hover: rgba(124, 58, 237, 0.5);
+}
+
+.dark {
+  /* Global Background Strategy */
+  --bg-main: #020617; /* Deep Navy/Black */
+
+  /* Nebula Colors - Dark */
+  --nebula-1: rgba(124, 58, 237, 0.12); /* Violet */
+  --nebula-2: rgba(59, 130, 246, 0.10); /* Blue */
+  --nebula-3: rgba(20, 184, 166, 0.08); /* Teal */
+
+  /* Grid Color - Dark */
+  --grid-color: rgba(255, 255, 255, 0.1); 
+
+  /* Footer Variables - Dark */
+  --footer-base: #020617;
+  --footer-radial-start: #020617;
+  --footer-radial-end: #1e1b4b;
+
+  /* Scrollbar - Dark Theme */
+  --sb-thumb: rgba(255, 255, 255, 0.2);
+  --sb-thumb-hover: rgba(255, 255, 255, 0.4);
+}
+
+/* Global Body Style */
+body {
+  background: var(--bg-main);
+  transition: background 0.4s ease;
+  color: #0f172a;
+}
+
+.dark body {
+  color: #f1f5f9;
+}
+
+/* Minimal Scrollbar Styling */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--sb-thumb) var(--sb-track);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sb-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--sb-thumb);
+  border-radius: 99px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+  transition: background-color 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--sb-thumb-hover);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Utilities for compatibility */
+.bg-card-dark { background-color: #161b28; }
+.bg-primary-start { background-color: #7c3aed; }
+.bg-primary-end { background-color: #6366f1; }
+.from-primary-start { --tw-gradient-from: #7c3aed; }
+.to-primary-end { --tw-gradient-to: #6366f1; }
+.text-primary-start { color: #7c3aed; }
+.shadow-soft-md { box-shadow: 0 8px 16px rgba(0,0,0,0.06); }
+.shadow-soft-xl { box-shadow: 0 24px 48px rgba(0,0,0,0.12); }

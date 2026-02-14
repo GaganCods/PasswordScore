@@ -1,16 +1,16 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Shield, Moon, Sun, Home, Sparkles, BookOpen, Menu, X, ArrowRight, HelpCircle, Info } from 'lucide-react';
-import { PageView } from '../types';
+import { Shield, Moon, Sun, Home, Sparkles, BookOpen, Menu, X, ArrowRight } from 'lucide-react';
+import { Link } from './Link';
+import { useNavigation } from './NavigationContext';
+import { useTheme } from './ThemeProvider';
 
-interface HeaderProps {
-  darkMode: boolean;
-  toggleDarkMode: () => void;
-  onNavigate: (page: PageView) => void;
-  currentPage: PageView;
-}
-
-export const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode, onNavigate, currentPage }) => {
+export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { pathname } = useNavigation();
+  const { theme, toggleTheme } = useTheme();
+  const darkMode = theme === 'dark';
 
   // Close menu on resize
   useEffect(() => {
@@ -23,40 +23,7 @@ export const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode, onNavi
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const handleNavigation = (target: string) => {
-    setIsMenuOpen(false);
-    
-    if (target === 'home') {
-      onNavigate('home');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-
-    if (target === 'tool') {
-      onNavigate('tool');
-      return;
-    }
-
-    if (target === 'blog') {
-      onNavigate('blog');
-      return;
-    }
-
-    if (currentPage !== 'home') {
-      onNavigate('home');
-      setTimeout(() => {
-        const element = document.getElementById(target);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    } else {
-      const element = document.getElementById(target);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  };
+  const isActive = (path: string) => pathname === path;
 
   return (
     <>
@@ -72,9 +39,9 @@ export const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode, onNavi
         <div className="pointer-events-auto w-full max-w-6xl bg-white/80 dark:bg-card-dark/80 backdrop-blur-xl border border-white/20 dark:border-white/5 rounded-2xl shadow-soft-md flex items-center justify-between px-6 py-3 transition-all duration-300 relative z-50">
           
           {/* Logo */}
-          <div 
+          <Link 
+            href="/"
             className="flex items-center gap-2 cursor-pointer group"
-            onClick={() => handleNavigation('home')}
           >
             <div className="bg-gradient-to-br from-primary-start to-primary-end p-2 rounded-lg text-white shadow-lg shadow-primary-start/30 group-hover:scale-105 transition-transform duration-300">
                <Shield size={20} fill="currentColor" className="opacity-90" />
@@ -82,45 +49,38 @@ export const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode, onNavi
             <span className="text-lg font-bold tracking-tight text-gray-900 dark:text-white">
               PasswordScore
             </span>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-1 bg-gray-100/50 dark:bg-white/5 px-2 py-1.5 rounded-full border border-transparent dark:border-white/5">
-              <button 
-                onClick={() => handleNavigation('home')} 
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${currentPage === 'home' ? 'bg-white dark:bg-white/10 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-white/5'}`}
+              <Link 
+                href="/" 
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${isActive('/') ? 'bg-white dark:bg-white/10 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-white/5'}`}
               >
                 <Home size={16} />
                 Home
-              </button>
-              <button 
-                onClick={() => handleNavigation('blog')} 
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${currentPage === 'blog' || currentPage === 'blog-post' ? 'bg-white dark:bg-white/10 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-white/5'}`}
+              </Link>
+              <Link 
+                href="/tool" 
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${isActive('/tool') ? 'bg-white dark:bg-white/10 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-white/5'}`}
+              >
+                <Sparkles size={16} />
+                Tool
+              </Link>
+              <Link 
+                href="/blog" 
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${isActive('/blog') || (pathname && pathname.startsWith('/blog/')) ? 'bg-white dark:bg-white/10 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-white/5'}`}
               >
                 <BookOpen size={16} />
                 Blog
-              </button>
-              <button 
-                onClick={() => handleNavigation('features')} 
-                className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-white/5 transition-all duration-200"
-              >
-                <Sparkles size={16} />
-                Features
-              </button>
-              <button 
-                onClick={() => handleNavigation('learn')} 
-                className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-white/5 transition-all duration-200"
-              >
-                <Info size={16} />
-                About
-              </button>
+              </Link>
           </nav>
           
           {/* Right Actions */}
           <div className="flex items-center gap-3">
               {/* Desktop Theme Toggle */}
               <button 
-                  onClick={toggleDarkMode}
+                  onClick={toggleTheme}
                   className="hidden md:flex p-2.5 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
                   aria-label="Toggle dark mode"
               >
@@ -128,13 +88,13 @@ export const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode, onNavi
               </button>
               
               {/* Desktop CTA */}
-              <button 
-                onClick={() => onNavigate('tool')}
+              <Link 
+                href="/tool"
                 className="group hidden md:flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-full text-sm font-medium shadow-md hover:shadow-lg dark:shadow-[0_0_20px_rgba(124,58,237,0.4)] transform hover:scale-105 active:scale-95 transition-all duration-300"
               >
                 Check Now
                 <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
-              </button>
+              </Link>
 
               {/* Mobile Menu Button - ONLY Visible on Mobile */}
               <button 
@@ -162,52 +122,36 @@ export const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode, onNavi
         >
           {/* Navigation Items */}
           <nav className="flex flex-col space-y-1">
-            <button 
-              onClick={() => handleNavigation('home')}
+            <Link 
+              href="/"
+              onClick={() => setIsMenuOpen(false)}
               className="flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-left group"
             >
               <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-600 dark:text-blue-400 group-hover:scale-105 transition-transform">
                 <Home size={18} />
               </div>
               Home
-            </button>
-            <button 
-              onClick={() => handleNavigation('blog')}
+            </Link>
+            <Link 
+              href="/tool"
+              onClick={() => setIsMenuOpen(false)}
+              className="flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-left group"
+            >
+              <div className="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg text-purple-600 dark:text-purple-400 group-hover:scale-105 transition-transform">
+                <Sparkles size={18} />
+              </div>
+              Tool
+            </Link>
+            <Link 
+              href="/blog"
+              onClick={() => setIsMenuOpen(false)}
               className="flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-left group"
             >
               <div className="p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg text-indigo-600 dark:text-indigo-400 group-hover:scale-105 transition-transform">
                 <BookOpen size={18} />
               </div>
               Blog
-            </button>
-            <button 
-              onClick={() => handleNavigation('features')}
-              className="flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-left group"
-            >
-              <div className="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg text-purple-600 dark:text-purple-400 group-hover:scale-105 transition-transform">
-                <Sparkles size={18} />
-              </div>
-              Features
-            </button>
-           
-            <button 
-              onClick={() => handleNavigation('learn')}
-              className="flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-left group"
-            >
-               <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg text-green-600 dark:text-green-400 group-hover:scale-105 transition-transform">
-                <Info size={18} />
-              </div>
-              About
-            </button>
-             <button 
-              onClick={() => handleNavigation('faq')}
-              className="flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-left group"
-            >
-               <div className="p-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg text-amber-600 dark:text-amber-400 group-hover:scale-105 transition-transform">
-                <HelpCircle size={18} />
-              </div>
-              FAQ
-            </button>
+            </Link>
           </nav>
 
           {/* Divider */}
@@ -221,7 +165,7 @@ export const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode, onNavi
             </span>
             
             <button 
-              onClick={toggleDarkMode}
+              onClick={toggleTheme}
               className={`w-12 h-7 rounded-full p-1 transition-colors duration-300 flex items-center ${darkMode ? 'bg-primary-start' : 'bg-gray-200'}`}
               aria-label="Toggle theme"
             >
@@ -230,12 +174,13 @@ export const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode, onNavi
           </div>
 
           {/* CTA Button */}
-          <button 
-            onClick={() => handleNavigation('tool')}
+          <Link 
+            href="/tool"
+            onClick={() => setIsMenuOpen(false)}
             className="w-full py-3.5 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-violet-500/20 active:scale-95 transition-all mt-2"
           >
             Try Now <ArrowRight size={16} />
-          </button>
+          </Link>
         </div>
       </header>
     </>

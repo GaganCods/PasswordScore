@@ -1,25 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import { ArrowLeft, Calendar, Clock, User, Share2, Check, Copy } from 'lucide-react';
-import { BlogPost, PageView } from '../types';
+'use client';
 
-interface BlogPostProps {
-  post: BlogPost;
-  onNavigate: (page: PageView) => void;
-  onBack: () => void;
+import React, { useEffect, useState } from 'react';
+import { ArrowLeft, Calendar, Clock, User, Share2, Check } from 'lucide-react';
+import { Link } from './Link';
+
+interface BlogPostViewProps {
+  post: {
+    title: string;
+    excerpt: string;
+    category: string;
+    date: string;
+    readTime: string;
+    image: string;
+    content: React.ReactNode;
+  };
 }
 
-export const BlogPostView: React.FC<BlogPostProps> = ({ post, onNavigate, onBack }) => {
+export const BlogPostView: React.FC<BlogPostViewProps> = ({ post }) => {
     const [shareState, setShareState] = useState<'idle' | 'copied'>('idle');
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, [post]);
+    }, []);
 
     const handleShare = async () => {
         const shareData = {
             title: post.title,
             text: post.excerpt,
-            url: window.location.href // In a real routing setup, this would be a specific slug URL
+            url: window.location.href 
         };
 
         try {
@@ -43,15 +51,15 @@ export const BlogPostView: React.FC<BlogPostProps> = ({ post, onNavigate, onBack
 
             <div className="relative z-10 w-full max-w-3xl mx-auto px-4 sm:px-6 animate-fade-in-up">
                 {/* Back Button */}
-                <button 
-                    onClick={onBack}
-                    className="group flex items-center gap-2 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 mb-8 transition-colors"
+                <Link 
+                    href="/blog"
+                    className="group flex items-center gap-2 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 mb-8 transition-colors inline-flex"
                 >
                     <div className="p-2 rounded-full bg-white/50 dark:bg-white/5 border border-gray-200 dark:border-white/10 group-hover:border-blue-200 dark:group-hover:border-blue-900">
                         <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
                     </div>
                     <span className="font-medium">Back to Articles</span>
-                </button>
+                </Link>
 
                 {/* Article Header */}
                 <div className="mb-10">
@@ -85,9 +93,7 @@ export const BlogPostView: React.FC<BlogPostProps> = ({ post, onNavigate, onBack
                 
                 {/* Article Content */}
                 <div className="prose prose-lg dark:prose-invert max-w-none mb-16">
-                     {typeof post.content === 'function' ? post.content(onNavigate) : (
-                         post.content || <p className="text-gray-500 italic">Content coming soon...</p>
-                     )}
+                     {post.content}
                 </div>
                 
                 {/* Article Footer / Share */}

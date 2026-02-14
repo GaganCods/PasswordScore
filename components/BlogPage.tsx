@@ -1,16 +1,13 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Search, Calendar, Clock, ArrowRight, X } from 'lucide-react';
-import { PageView, BlogPost } from '../types';
 import { BLOG_POSTS } from '../data/blogPosts';
+import { Link } from './Link';
 
 const CATEGORIES = ["All", "Security Guide", "Best Practices", "Education", "Cyber Threats", "Password Tips", "Trust & Safety"];
 
-interface BlogPageProps {
-  onNavigate: (page: PageView) => void;
-  onReadPost: (slug: string) => void;
-}
-
-export const BlogPage: React.FC<BlogPageProps> = ({ onNavigate, onReadPost }) => {
+export const BlogPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
@@ -96,7 +93,7 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onNavigate, onReadPost }) =>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
             {filteredPosts.length > 0 ? (
                 filteredPosts.map((post) => (
-                    <BlogCard key={post.id} post={post} onClick={() => onReadPost(post.slug)} />
+                    <BlogCard key={post.id} post={post} />
                 ))
             ) : (
                 <div className="col-span-full py-20 text-center">
@@ -125,12 +122,12 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onNavigate, onReadPost }) =>
                  <p className="text-gray-300 mb-10 text-lg leading-relaxed font-light">
                      Don't wait for a data breach to find out your password was weak. Our tool runs locally in your browser—100% private.
                  </p>
-                 <button 
-                    onClick={() => onNavigate('tool')}
-                    className="px-10 py-4 bg-white text-gray-900 rounded-full font-bold text-lg hover:bg-blue-50 transition-all shadow-lg hover:scale-105 transform duration-200"
+                 <Link 
+                    href="/tool"
+                    className="inline-block px-10 py-4 bg-white text-gray-900 rounded-full font-bold text-lg hover:bg-blue-50 transition-all shadow-lg hover:scale-105 transform duration-200"
                  >
                      Know Your Password Score
-                 </button>
+                 </Link>
              </div>
         </div>
 
@@ -140,55 +137,56 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onNavigate, onReadPost }) =>
 };
 
 // Reusable Blog Card Component
-const BlogCard: React.FC<{ post: BlogPost; onClick: () => void }> = ({ post, onClick }) => {
+const BlogCard: React.FC<{ post: any }> = ({ post }) => {
   return (
-    <article 
-        onClick={onClick}
-        className="group flex flex-col bg-white/40 dark:bg-gray-900/40 backdrop-blur-xl border border-white/50 dark:border-white/10 rounded-[24px] overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 cursor-pointer h-full"
-    >
-        {/* Image Container */}
-        <div className="relative h-56 overflow-hidden">
-            <img 
-                src={post.image} 
-                alt={post.title} 
-                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent opacity-60" />
-            
-            {/* Category Badge */}
-            <div className="absolute top-4 left-4">
-                <span className="px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white bg-white/20 backdrop-blur-md border border-white/20 rounded-lg shadow-sm">
-                    {post.category}
-                </span>
-            </div>
-        </div>
-
-        {/* Content */}
-        <div className="flex-1 p-6 md:p-8 flex flex-col">
-            {/* Meta */}
-            <div className="flex items-center gap-4 text-xs font-medium text-gray-500 dark:text-gray-400 mb-4">
-                <div className="flex items-center gap-1.5">
-                    <Calendar size={14} />
-                    <span>{post.date}</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                    <Clock size={14} />
-                    <span>{post.readTime}</span>
+    <Link href={`/blog/${post.slug}`} className="block h-full">
+        <article 
+            className="group flex flex-col bg-white/40 dark:bg-gray-900/40 backdrop-blur-xl border border-white/50 dark:border-white/10 rounded-[24px] overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 cursor-pointer h-full"
+        >
+            {/* Image Container */}
+            <div className="relative h-56 overflow-hidden">
+                <img 
+                    src={post.image} 
+                    alt={post.title} 
+                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent opacity-60" />
+                
+                {/* Category Badge */}
+                <div className="absolute top-4 left-4">
+                    <span className="px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white bg-white/20 backdrop-blur-md border border-white/20 rounded-lg shadow-sm">
+                        {post.category}
+                    </span>
                 </div>
             </div>
 
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                {post.title}
-            </h3>
+            {/* Content */}
+            <div className="flex-1 p-6 md:p-8 flex flex-col">
+                {/* Meta */}
+                <div className="flex items-center gap-4 text-xs font-medium text-gray-500 dark:text-gray-400 mb-4">
+                    <div className="flex items-center gap-1.5">
+                        <Calendar size={14} />
+                        <span>{post.date}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                        <Clock size={14} />
+                        <span>{post.readTime}</span>
+                    </div>
+                </div>
 
-            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-6 line-clamp-3 flex-1 font-light">
-                {post.excerpt}
-            </p>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    {post.title}
+                </h3>
 
-            <div className="flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mt-auto">
-                Read Article <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-6 line-clamp-3 flex-1 font-light">
+                    {post.excerpt}
+                </p>
+
+                <div className="flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mt-auto">
+                    Read Article <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                </div>
             </div>
-        </div>
-    </article>
+        </article>
+    </Link>
   );
 };
