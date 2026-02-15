@@ -60,8 +60,9 @@ It’s built to be transparent, fast, and privacy-focused.
 - No backend services
 
 ## 📌 Live Demo
+https://passwordscore.vercel.app/
 
-[Add your live link here]
+
 
 ## 📄 License
 
