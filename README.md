@@ -61,7 +61,7 @@ It’s built to be transparent, fast, and privacy-focused.
 
 ## 📌 Live Demo
 
-[Add your live link here]
+[[Password Score]](https://passwordscore.vercel.app/)
 
 ## 📄 License
 
