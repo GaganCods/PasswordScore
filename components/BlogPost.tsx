@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { ArrowLeft, Calendar, Clock, User, Share2, Check } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from './Link';
 
 interface BlogPostViewProps {
   post: {
@@ -52,7 +52,7 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({ post }) => {
             <div className="relative z-10 w-full max-w-3xl mx-auto px-4 sm:px-6 animate-fade-in-up">
                 {/* Back Button */}
                 <Link 
-                    to="/blog"
+                    href="/blog"
                     className="group flex items-center gap-2 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 mb-8 transition-colors inline-flex"
                 >
                     <div className="p-2 rounded-full bg-white/50 dark:bg-white/5 border border-gray-200 dark:border-white/10 group-hover:border-blue-200 dark:group-hover:border-blue-900">

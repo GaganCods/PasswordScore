@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { ArrowRight, CheckCircle2, Eye, EyeOff, ShieldCheck, Zap, Activity, Clock, Lock } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from './Link';
 import { calculatePasswordStrength, estimateCrackTime } from '../utils/passwordLogic';
 import { STRENGTH_LABELS } from '../constants';
 
@@ -121,7 +121,7 @@ export const Hero: React.FC = () => {
             
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-5">
               <Link 
-                to="/tool"
+                href="/tool"
                 className="group w-full sm:w-auto px-9 py-5 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-full font-bold text-lg hover:shadow-glow-purple hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 cursor-pointer"
               >
                 Try Now <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />

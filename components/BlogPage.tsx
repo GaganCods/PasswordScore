@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Search, Calendar, Clock, ArrowRight, X } from 'lucide-react';
 import { BLOG_POSTS } from '../data/blogPosts';
-import { Link } from 'react-router-dom';
+import { Link } from './Link';
 
 const CATEGORIES = ["All", "Security Guide", "Best Practices", "Education", "Cyber Threats", "Password Tips", "Trust & Safety"];
 
@@ -123,7 +123,7 @@ export const BlogPage: React.FC = () => {
                      Don't wait for a data breach to find out your password was weak. Our tool runs locally in your browser—100% private.
                  </p>
                  <Link 
-                    to="/tool"
+                    href="/tool"
                     className="inline-block px-10 py-4 bg-white text-gray-900 rounded-full font-bold text-lg hover:bg-blue-50 transition-all shadow-lg hover:scale-105 transform duration-200"
                  >
                      Know Your Password Score
@@ -139,7 +139,7 @@ export const BlogPage: React.FC = () => {
 // Reusable Blog Card Component
 const BlogCard: React.FC<{ post: any }> = ({ post }) => {
   return (
-    <Link to={`/blog/${post.slug}`} className="block h-full">
+    <Link href={`/blog/${post.slug}`} className="block h-full">
         <article 
             className="group flex flex-col bg-white/40 dark:bg-gray-900/40 backdrop-blur-xl border border-white/50 dark:border-white/10 rounded-[24px] overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 cursor-pointer h-full"
         >
