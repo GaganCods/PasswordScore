@@ -1,69 +1,46 @@
-import React from 'react';
-import { Header } from './components/Header';
+import React, { useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
-import { LandingPage } from './components/LandingPage';
-import { PasswordStrengthTool } from './components/PasswordStrengthTool';
-import { PrivacyPolicy } from './components/PrivacyPolicy';
-import { ContactPage } from './components/ContactPage';
-import { BlogPage } from './components/BlogPage';
-import { BlogPostView } from './components/BlogPost';
-import { CosmicBackground } from './components/CosmicBackground';
 import { BackToTop } from './components/BackToTop';
+import { CosmicBackground } from './components/CosmicBackground';
 import { ThemeProvider } from './components/ThemeProvider';
-import { NavigationProvider, useNavigation } from './components/NavigationContext';
-import { BLOG_POSTS } from './data/blogPosts';
 
-const AppContent: React.FC = () => {
-  const { view, slug } = useNavigation();
+// Pages
+import { Home } from './pages/Home';
+import { Tool } from './pages/Tool';
+import { Blog } from './pages/Blog';
+import { BlogArticle } from './pages/BlogArticle';
+
+const App: React.FC = () => {
+  const { pathname } = useLocation();
+
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-x-hidden">
-        
+    <ThemeProvider>
+      <div className="min-h-screen flex flex-col relative overflow-x-hidden">
         <CosmicBackground />
+        
+        <Navbar />
 
-        <Header />
-
-        <main className="flex-grow pt-24"> 
-          {/* pt-24 accounts for fixed header height */}
-          {view === 'home' && (
-            <LandingPage />
-          )}
-          
-          {view === 'tool' && (
-              <PasswordStrengthTool />
-          )}
-
-          {view === 'blog' && (
-              <BlogPage />
-          )}
-
-          {view === 'blog-post' && slug && (
-              <BlogPostView 
-                post={BLOG_POSTS.find(p => p.slug === slug)!} 
-              />
-          )}
-
-          {view === 'privacy' && (
-              <PrivacyPolicy />
-          )}
-
-          {view === 'contact' && (
-              <ContactPage />
-          )}
+        <main className="flex-grow pt-24">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/tool" element={<Tool />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogArticle />} />
+            {/* Fallback for 404s can go to Home or a dedicated 404 page */}
+            <Route path="*" element={<Home />} />
+          </Routes>
         </main>
 
         <Footer />
         <BackToTop />
-    </div>
-  );
-};
-
-const App: React.FC = () => {
-  return (
-    <ThemeProvider>
-      <NavigationProvider>
-        <AppContent />
-      </NavigationProvider>
+      </div>
     </ThemeProvider>
   );
 };

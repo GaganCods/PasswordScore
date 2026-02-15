@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
-import { Link } from './Link';
+import { Link } from 'react-router-dom';
 
 export const CTASection: React.FC = () => {
   return (
@@ -42,7 +42,7 @@ export const CTASection: React.FC = () => {
           </p>
           
           <Link 
-              href="/tool"
+              to="/tool"
               className="group relative px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-full font-bold text-lg hover:scale-105 transition-all duration-300 flex items-center gap-2 mx-auto overflow-hidden shadow-lg shadow-gray-900/10 dark:shadow-white/10 w-fit"
           >
               <span className="relative z-10 flex items-center gap-2">
