@@ -1,12 +1,14 @@
-'use client';
-
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { ArrowRight, CheckCircle2, Eye, EyeOff, ShieldCheck, Zap, Activity, Clock, Lock } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { PageView } from '../types';
 import { calculatePasswordStrength, estimateCrackTime } from '../utils/passwordLogic';
 import { STRENGTH_LABELS } from '../constants';
 
-export const Hero: React.FC = () => {
+interface HeroProps {
+  onNavigate: (page: PageView) => void;
+}
+
+export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(true);
   const [isAnimating, setIsAnimating] = useState(true);
@@ -120,12 +122,12 @@ export const Hero: React.FC = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-5">
-              <Link 
-                to="/tool"
+              <button 
+                onClick={() => onNavigate('tool')}
                 className="group w-full sm:w-auto px-9 py-5 bg-gradient-to-r from-primary-start to-primary-end text-white rounded-full font-bold text-lg hover:shadow-glow-purple hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 cursor-pointer"
               >
                 Try Now <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
+              </button>
               <button 
                 onClick={() => scrollToSection('learn')}
                 className="w-full sm:w-auto px-9 py-5 bg-white/50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-full font-semibold text-lg hover:bg-white/60 dark:hover:bg-white/10 hover:scale-105 transition-all duration-300 flex items-center justify-center cursor-pointer backdrop-blur-md"

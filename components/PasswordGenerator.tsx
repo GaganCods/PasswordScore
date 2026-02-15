@@ -68,8 +68,14 @@ export const PasswordGenerator: React.FC<PasswordGeneratorProps> = ({ onGenerate
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="bg-white/90 dark:bg-[#161b28]/90 backdrop-blur-xl rounded-[24px] shadow-2xl max-w-lg w-full border border-gray-200 dark:border-white/10 overflow-hidden transform scale-100 transition-all flex flex-col max-h-[90vh]">
+    <div 
+        className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+        onClick={onClose}
+    >
+      <div 
+        className="bg-white/90 dark:bg-[#161b28]/90 backdrop-blur-xl rounded-[24px] shadow-2xl max-w-lg w-full border border-gray-200 dark:border-white/10 overflow-hidden transform scale-100 transition-all flex flex-col max-h-[90vh]"
+        onClick={(e) => e.stopPropagation()}
+      >
         
         {/* Header */}
         <div className="flex justify-between items-center p-6 pb-4 border-b border-gray-100 dark:border-white/5 bg-white/50 dark:bg-white/5 backdrop-blur-md">
@@ -340,3 +346,4 @@ export const PasswordGenerator: React.FC<PasswordGeneratorProps> = ({ onGenerate
     </div>
   );
 };
+    

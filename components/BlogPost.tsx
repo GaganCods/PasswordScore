@@ -1,33 +1,25 @@
-'use client';
-
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, Calendar, Clock, User, Share2, Check } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ArrowLeft, Calendar, Clock, User, Share2, Check, Copy } from 'lucide-react';
+import { BlogPost, PageView } from '../types';
 
-interface BlogPostViewProps {
-  post: {
-    title: string;
-    excerpt: string;
-    category: string;
-    date: string;
-    readTime: string;
-    image: string;
-    content: React.ReactNode;
-  };
+interface BlogPostProps {
+  post: BlogPost;
+  onNavigate: (page: PageView) => void;
+  onBack: () => void;
 }
 
-export const BlogPostView: React.FC<BlogPostViewProps> = ({ post }) => {
+export const BlogPostView: React.FC<BlogPostProps> = ({ post, onNavigate, onBack }) => {
     const [shareState, setShareState] = useState<'idle' | 'copied'>('idle');
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, []);
+    }, [post]);
 
     const handleShare = async () => {
         const shareData = {
             title: post.title,
             text: post.excerpt,
-            url: window.location.href 
+            url: window.location.href // In a real routing setup, this would be a specific slug URL
         };
 
         try {
@@ -51,15 +43,15 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({ post }) => {
 
             <div className="relative z-10 w-full max-w-3xl mx-auto px-4 sm:px-6 animate-fade-in-up">
                 {/* Back Button */}
-                <Link 
-                    to="/blog"
-                    className="group flex items-center gap-2 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 mb-8 transition-colors inline-flex"
+                <button 
+                    onClick={onBack}
+                    className="group flex items-center gap-2 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 mb-8 transition-colors"
                 >
                     <div className="p-2 rounded-full bg-white/50 dark:bg-white/5 border border-gray-200 dark:border-white/10 group-hover:border-blue-200 dark:group-hover:border-blue-900">
                         <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
                     </div>
                     <span className="font-medium">Back to Articles</span>
-                </Link>
+                </button>
 
                 {/* Article Header */}
                 <div className="mb-10">
@@ -93,7 +85,9 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({ post }) => {
                 
                 {/* Article Content */}
                 <div className="prose prose-lg dark:prose-invert max-w-none mb-16">
-                     {post.content}
+                     {typeof post.content === 'function' ? post.content(onNavigate) : (
+                         post.content || <p className="text-gray-500 italic">Content coming soon...</p>
+                     )}
                 </div>
                 
                 {/* Article Footer / Share */}
